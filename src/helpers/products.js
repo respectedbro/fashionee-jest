@@ -18,7 +18,7 @@ export const getProducts = (pagination, sortType, filters) => {
     total: productsForModify.length
   }
 }
-const onSort = (products, type) => {
+export const onSort = (products, type) => {
   switch (type) {
     case 'NAME_ASC':
       products.sort((a, b) => a.name > b.name ? 1 : -1)

@@ -3,7 +3,7 @@ import {render, screen, fireEvent} from '@testing-library/react';
 
 
 describe('render Cart', () => {
-    test('render promo texts in doc', () => {
+    test('Рендер текста в промокоде', () => {
         render(<Cart/>)
 
         expect(screen.getByText('You have a promo code?')).toBeInTheDocument();

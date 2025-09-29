@@ -32,6 +32,8 @@ export const onSort = (products, type) => {
     case 'PRICE_DESC':
       products.sort((a, b) => a.price < b.price ? 1 : -1)
       break
+    default:
+      return 'Неизвестный статус';
   }
 }
 

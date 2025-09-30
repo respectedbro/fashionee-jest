@@ -1,39 +1,46 @@
-import {Cart} from './index';
-import {render, screen, fireEvent} from '@testing-library/react';
+import { Cart } from "./index";
+import { fireEvent, render, screen } from "@testing-library/react";
 
+describe("render Cart", () => {
+  test("Рендер текста в промокоде", () => {
+    render(<Cart />);
 
-describe('render Cart', () => {
-    test('Рендер текста в промокоде', () => {
-        render(<Cart/>)
+    expect(screen.getByText("You have a promo code?")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter promo code")).toBeInTheDocument();
+    expect(screen.getByText("Применить")).toBeInTheDocument();
+  });
 
-        expect(screen.getByText('You have a promo code?')).toBeInTheDocument();
-        expect(screen.getByPlaceholderText('Enter promo code')).toBeInTheDocument();
-        expect(screen.getByText('Применить')).toBeInTheDocument();
-    })
+  test("применяет скидку при введении правильного промо-кода", () => {
+    render(<Cart />);
 
-    test('применяет скидку при введении правильного промо-кода', () => {
-        render(<Cart />);
+    const promoInput = screen.getByTestId("promo-input");
+    const applyButton = screen.getByTestId("apply-button");
 
-        const promoInput = screen.getByPlaceholderText('Enter promo code');
-        const applyButton = screen.getByText('Применить');
+    fireEvent.change(promoInput, { target: { value: "ilovereact" } });
+    fireEvent.click(applyButton);
 
+    expect(screen.getByText("10%")).toBeInTheDocument();
+  });
 
-        fireEvent.change(promoInput, { target: { value: 'ilovereact' } });
-        fireEvent.click(applyButton);
+  test("Промо-код не верный", () => {
+    render(<Cart />);
 
+    const promoInput = screen.getByTestId("promo-input");
+    const applyButton = screen.getByTestId("apply-button");
 
-        expect(screen.getByText('10%')).toBeInTheDocument();
-    });
+    fireEvent.change(promoInput, { target: { value: "nocode" } });
+    fireEvent.click(applyButton);
 
-    test('Промо-код не введён', () => {
-        render(<Cart />);
+    expect(screen.getByText("No")).toBeInTheDocument();
+  });
 
-        const promoInput = screen.getByPlaceholderText('Enter promo code');
-        const applyButton = screen.getByText('Применить');
+  test("поле промо-кода пустое", () => {
+    render(<Cart />);
 
-        fireEvent.change(promoInput, { target: { value: 'nocode' } });
-        fireEvent.click(applyButton);
+    const applyButton = screen.getByTestId("apply-button");
 
-        expect(screen.getByText('No')).toBeInTheDocument();
-    });
-})
+    fireEvent.click(applyButton);
+
+    expect(screen.getByText("No")).toBeInTheDocument();
+  });
+});
